@@ -1,0 +1,201 @@
+Kütüphane Sistemi - Django Modelleri Açıklaması
+
+Bu döküman, Django tabanlı bir kütüphane yönetim sistemi için oluşturulan modelleri açıklar. Her model, sistemin işleyişinde belirli bir sorumluluğa sahiptir.
+
+1️⃣ Category (Kitap Kategorisi)
+
+📌 Amaç:
+
+Kitapları farklı kategorilere ayırmaya yarar (örn. Roman, Bilim, Tarih vs.).
+
+📌 Alanlar:
+
+name → Kategori adı (örn. Roman, Tarih, Teknoloji vs.)
+
+Admin panelinde veya API içinde kategorilere göre kitapları filtrelemek için kullanılır.
+
+2️⃣ Publisher (Yayınevi)
+
+📌 Amaç:
+
+Kitapların hangi yayınevine ait olduğunu saklar.
+
+📌 Alanlar:
+
+name → Yayınevi adı (örn. Alfa Yayınları, Can Yayınları)
+
+address → Yayınevinin adresi (Opsiyonel)
+
+website → Yayınevinin web sitesi (Opsiyonel)
+
+3️⃣ Author (Yazar)
+
+📌 Amaç:
+
+Kitapların hangi yazara ait olduğunu saklar.
+
+📌 Alanlar:
+
+first_name → Yazar adı
+
+last_name → Yazar soyadı
+
+birth_date → Yazarın doğum tarihi (Opsiyonel)
+
+📌 Özel Not:
+
+Bir kitap birden fazla yazar içerebilir! Bu yüzden ManyToManyField ile kitap-yazar ilişkisi kurulmuştur.
+
+4️⃣ Book (Kitap)
+
+📌 Amaç:
+
+Kütüphanedeki kitapların bilgilerini saklar.
+
+📌 Alanlar:
+
+title → Kitap adı
+
+isbn → Kitabın benzersiz ISBN kodu
+
+category → Kitabın hangi kategoriye ait olduğu
+
+author → Kitabın yazar(lar)ı (ManyToMany)
+
+publisher → Kitabı yayımlayan yayınevi
+
+publication_date → Kitabın yayınlanma tarihi
+
+pages → Kitabın sayfa sayısı
+
+language → Kitabın dili (Varsayılan: Türkçe)
+
+description → Kitap hakkında kısa açıklama
+
+cover_image → Kitabın kapak resmi
+
+stock → Kütüphanede kaç adet olduğu
+
+status → Kitabın durumu (Mevcut, Ödünç Verildi, Rezerve Edildi, Kayıp)
+
+📌 Özel Not:
+
+Kitap ödünç verildiğinde veya kaybolduğunda status değişiyor.
+
+5️⃣ Loan (Ödünç Alma)
+
+📌 Amaç:
+
+Kullanıcıların kitapları ödünç almasını ve geri teslim etmesini takip eder.
+
+📌 Alanlar:
+
+user → Kitabı ödünç alan kullanıcı
+
+book → Ödünç alınan kitap
+
+loan_date → Ödünç alma tarihi
+
+due_date → Teslim edilmesi gereken tarih
+
+return_date → Kitabın gerçekten iade edildiği tarih
+
+is_returned → Kitap geri verildiyse True olur.
+
+📌 Özel Not:
+
+Eğer kullanıcı kitabı iade etmezse, ceza uygulanabilir.
+
+İade edilen kitap eğer rezervasyonu olan biri varsa, otomatik olarak ona atanır!
+
+6️⃣ Reservation (Rezervasyon)
+
+📌 Amaç:
+
+Eğer kitap ödünç alınmışsa, başka bir kullanıcının önceden rezervasyon yapmasını sağlar.
+
+📌 Alanlar:
+
+user → Kitabı rezerve eden kullanıcı
+
+book → Rezerve edilen kitap
+
+reservation_date → Rezervasyon tarihi
+
+expiration_date → Rezervasyonun geçerlilik süresi (Varsayılan: 3 gün)
+
+is_active → Rezervasyon hala aktif mi?
+
+📌 Özel Not:
+
+Eğer bir kullanıcı kitabı iade ederse, rezervasyonu olan ilk kişiye ödünç verilir.
+
+7️⃣ Comment (Yorum)
+
+📌 Amaç:
+
+Kullanıcıların kitaplar hakkında yorum yapmasını ve puan vermesini sağlar.
+
+📌 Alanlar:
+
+user → Yorumu yapan kullanıcı
+
+book → Yorum yapılan kitap
+
+text → Yorum metni
+
+rating → 1-5 arası puanlama
+
+created_at → Yorumun yapıldığı tarih
+
+8️⃣ Favorite (Favoriler)
+
+📌 Amaç:
+
+Kullanıcının favori kitaplarını saklar.
+
+📌 Alanlar:
+
+user → Kitabı favorilere ekleyen kullanıcı
+
+book → Favorilere eklenen kitap
+
+added_at → Favorilere eklenme tarihi
+
+9️⃣ Penalty (Ceza)
+
+📌 Amaç:
+
+Kullanıcının geç teslim ettiği veya zarar verdiği kitaplar için ceza oluşturur.
+
+📌 Alanlar:
+
+user → Cezalı kullanıcı
+
+amount → Ceza miktarı (TL cinsinden)
+
+reason → Ceza nedeni (Gecikme, Hasar, Kaybolma)
+
+is_paid → Ceza ödendi mi?
+
+issued_at → Ceza tarihi
+
+paid_at → Ödeme tarihi
+
+🔟 BookTracking (Kitap Takibi ve Bildirim)
+
+📌 Amaç:
+
+Kullanıcıların kitapları takip etmesini ve stok durumu değiştiğinde bildirim almasını sağlar.
+
+📌 Alanlar:
+
+user → Kitabı takip eden kullanıcı
+
+book → Takip edilen kitap
+
+notification_status → Bildirimin gönderilip gönderilmediği
+
+notified_at → Bildirim tarihi
+
+🚀 SONUÇ
