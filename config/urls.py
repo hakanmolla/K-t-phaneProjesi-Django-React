@@ -21,9 +21,24 @@ from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
 from rest_framework.routers import DefaultRouter
 from userSystem.views import *
+from  kutuphane.views import (
+    CategoryViewSet, PublisherViewSet, AuthorViewSet, BookViewSet,
+    LoanViewSet, ReservationViewSet, CommentViewSet, FavoriteViewSet,
+    PenaltyViewSet, BookTrackingViewSet
+)
 
 router=DefaultRouter()
 router.register(r'user',UserViewSets,basename='userViewSet')
+router.register(r'categories', CategoryViewSet)
+router.register(r'publishers', PublisherViewSet)
+router.register(r'authors', AuthorViewSet)
+router.register(r'books', BookViewSet)
+router.register(r'loans', LoanViewSet)
+router.register(r'reservations', ReservationViewSet)
+router.register(r'comments', CommentViewSet)
+router.register(r'favorites', FavoriteViewSet)
+router.register(r'penalties', PenaltyViewSet)
+router.register(r'booktrackings', BookTrackingViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

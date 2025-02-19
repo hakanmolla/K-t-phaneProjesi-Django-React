@@ -1,0 +1,196 @@
+📌 Kütüphane Yönetim Sistemi - Genel Tanıtım
+Bu sistem bir kütüphane uygulaması olarak tasarlandı. Kullanıcılar sisteme kayıt olup giriş yapabilir, kitapları ödünç alabilir, rezerve edebilir, yorum yapabilir ve favorilerine ekleyebilir.
+
+Eğer bir kullanıcı kitabı zamanında iade etmezse ceza alır. Ayrıca kullanıcılar istedikleri kitapları takip edebilir ve kitap tekrar mevcut olduğunda bildirim alır.
+
+🚀 Uygulamanın Temel İşlevleri
+✅ Kitapları Listeleme 📖
+✅ Kitap Ödünç Alma & Geri İade Etme 📚
+✅ Kitap Rezervasyonu Yapma 🔖
+✅ Kitaplara Yorum Yapma & Puan Verme ⭐
+✅ Favori Kitaplarını Kaydetme ❤️
+✅ Kullanıcılara Ceza Uygulama ⚠️
+✅ Kitapları Takip Etme & Bildirim Alma 🔔
+✅ Kütüphane Yöneticileri İçin CRUD İşlemleri ⚙️
+
+📌 1️⃣ Kullanıcı Sistemi (User Modeli)
+📌 Ne Yapar?
+
+Kullanıcıları sistemde benzersiz username ile kaydeder.
+email, telefon numarası, TCKN doğrulamaları içerir.
+Kullanıcının profil resmi yüklemesini sağlar.
+Kullanıcılara roller atar (admin, personel, üye)
+Kullanıcıların aktif olup olmadığını kontrol eder.
+Kullanıcılar JWT Token ile API'ye giriş yapabilir.
+📌 Örnek Kullanıcılar:
+
+json
+Kopyala
+Düzenle
+{
+    "username": "ali_kaya",
+    "email": "ali@example.com",
+    "phone_number": "+905555555555",
+    "role": "member",
+    "profile_picture": "profile_images/ali_kaya/profile.png"
+}
+📌 2️⃣ Kategoriler (Category Modeli)
+📌 Ne Yapar?
+
+Kitapları kategori bazlı gruplar.
+Örneğin: Roman, Bilim Kurgu, Tarih, Psikoloji
+📌 Örnek Kategoriler:
+
+json
+Kopyala
+Düzenle
+[
+    {"id": 1, "name": "Roman"},
+    {"id": 2, "name": "Bilim Kurgu"},
+    {"id": 3, "name": "Tarih"}
+]
+📌 3️⃣ Yayınevleri (Publisher Modeli)
+📌 Ne Yapar?
+
+Kitapları yayınlayan yayınevlerini saklar.
+Örneğin: Can Yayınları, Alfa Yayınları, İş Bankası Kültür Yayınları
+📌 Örnek Yayınevi:
+
+json
+Kopyala
+Düzenle
+{
+    "id": 1,
+    "name": "Alfa Yayınları",
+    "address": "İstanbul, Türkiye",
+    "website": "https://www.alfakitap.com/"
+}
+📌 4️⃣ Yazarlar (Author Modeli)
+📌 Ne Yapar?
+
+Kitapların yazar bilgilerini saklar
+Bir kitap birden fazla yazara ait olabilir!
+Örneğin: Orhan Pamuk, J.R.R. Tolkien, Victor Hugo
+📌 Örnek Yazar:
+
+json
+Kopyala
+Düzenle
+{
+    "id": 1,
+    "first_name": "Orhan",
+    "last_name": "Pamuk",
+    "birth_date": "1952-06-07"
+}
+📌 5️⃣ Kitaplar (Book Modeli)
+📌 Ne Yapar?
+
+Kütüphane koleksiyonundaki kitapları yönetir.
+Her kitap bir kategoriye, yayınevine ve yazara aittir.
+Kitabın kapak fotoğrafı, ISBN numarası, yayın tarihi, stok durumu gibi bilgileri içerir.
+Kitap ödünç verildiğinde, rezerve edildiğinde veya kaybolduğunda status alanı değişir.
+📌 Örnek Kitap:
+
+json
+Kopyala
+Düzenle
+{
+    "id": 1,
+    "title": "Kırmızı Saçlı Kadın",
+    "isbn": "9789750837561",
+    "category": "Roman",
+    "author": ["Orhan Pamuk"],
+    "publisher": "Can Yayınları",
+    "publication_date": "2016-08-10",
+    "pages": 208,
+    "language": "Türkçe",
+    "description": "Bir aşk ve kader hikayesi...",
+    "stock": 5,
+    "status": "available"
+}
+📌 6️⃣ Kitap Ödünç Alma (Loan Modeli)
+📌 Ne Yapar?
+
+Kullanıcıların kitapları ödünç almasını sağlar.
+Kitap ödünç alındığında status: borrowed olur.
+Geri verildiğinde tekrar available olur.
+Eğer kullanıcı kitabı zamanında geri getirmezse ceza alır.
+📌 Örnek Ödünç Alma:
+
+json
+Kopyala
+Düzenle
+{
+    "user": "ali_kaya",
+    "book": "Kırmızı Saçlı Kadın",
+    "loan_date": "2024-02-19",
+    "due_date": "2024-03-05",
+    "is_returned": false
+}
+📌 7️⃣ Rezervasyonlar (Reservation Modeli)
+📌 Ne Yapar?
+
+Eğer kitap ödünç alındıysa, başka bir kullanıcının önceden rezervasyon yapmasını sağlar.
+Kitap geri geldiğinde, rezervasyonu olan ilk kullanıcıya atanır.
+Rezervasyon süresi 3 gündür.
+📌 Örnek Rezervasyon:
+
+json
+Kopyala
+Düzenle
+{
+    "user": "fatma_demir",
+    "book": "Kırmızı Saçlı Kadın",
+    "reservation_date": "2024-02-19",
+    "expiration_date": "2024-02-22",
+    "is_active": true
+}
+📌 8️⃣ Yorumlar (Comment Modeli)
+📌 Ne Yapar?
+
+Kullanıcılar kitaplara yorum yapabilir ve puan verebilir.
+Puanlar 1-5 arasındadır.
+📌 Örnek Yorum:
+
+json
+Kopyala
+Düzenle
+{
+    "user": "ali_kaya",
+    "book": "Kırmızı Saçlı Kadın",
+    "text": "Harika bir kitap, kesinlikle öneririm!",
+    "rating": 5
+}
+📌 9️⃣ Cezalar (Penalty Modeli)
+📌 Ne Yapar?
+
+Kitapları geç getiren veya zarar veren kullanıcılara ceza keser.
+📌 Örnek Ceza:
+
+json
+Kopyala
+Düzenle
+{
+    "user": "ali_kaya",
+    "amount": 50.00,
+    "reason": "late_return",
+    "is_paid": false
+}
+📌 🔟 Kitap Takip & Bildirimler (BookTracking Modeli)
+📌 Ne Yapar?
+
+Kullanıcılar kitapları takip edebilir.
+Eğer kitap tekrar mevcut olursa bildirim alırlar.
+📌 Örnek Takip:
+
+json
+Kopyala
+Düzenle
+{
+    "user": "ali_kaya",
+    "book": "Kırmızı Saçlı Kadın",
+    "notification_status": false
+}
+🚀 SONUÇ
+Bu sistemle tam fonksiyonel bir kütüphane yönetimi yapabilirsin! 🎯🔥
+Bir sonraki adım ne olsun? JWT Authentication ekleyelim mi? 😎

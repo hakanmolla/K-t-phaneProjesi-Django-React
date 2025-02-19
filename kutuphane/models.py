@@ -8,19 +8,16 @@ from django.core.exceptions import ValidationError
 User = get_user_model()  # Kullanıcı modelini dinamik olarak al
 
 # ISBN doğrulama
+from django.core.exceptions import ValidationError
+
+from django.core.exceptions import ValidationError
+
 def isbn_validator(value):
-    if len(value) != 13 or not value.isdigit():
-        raise ValidationError("Geçersiz ISBN.")
-    total = 0
-    for i, digit in enumerate(value[:-1]):
-        digit = int(digit)
-        if i % 2 == 0:
-            total += digit
-        else:
-            total += digit * 3
-    check_digit = (10 - (total % 10)) % 10
-    if check_digit != int(value[-1]):
-        raise ValidationError("Geçersiz ISBN.")
+    """Sadece ISBN-13 formatının uzunluğunu ve sayısallığını kontrol eder."""
+    
+    if not isinstance(value, str) or len(value) != 13 or not value.isdigit():
+        raise ValidationError("❌ Geçersiz ISBN. ISBN 13 haneli ve sadece rakamlardan oluşmalıdır.")
+
 
 # Kategori Modeli
 class Category(models.Model):
